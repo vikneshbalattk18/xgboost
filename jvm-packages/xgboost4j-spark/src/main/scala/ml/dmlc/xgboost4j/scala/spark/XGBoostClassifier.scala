@@ -226,6 +226,31 @@ class XGBoostClassificationModel private[ml](
    */
   def nativeBooster: Booster = _booster
 
+  /*
+    viknesh changes
+  */
+
+  def FeatureScore: mutable.Map[String, Integer] = {
+    return _booster.getFeatureScore()
+  }
+
+  def FeatureImportance: Map[String, Map[String, Double]] = {
+    /**
+    Supported: ["gain, "cover", "total_gain", "total_cover"]
+     */
+    val featuresList = FeatureScore.keys.toArray
+
+    return Map("gain" -> _booster.getScore(featuresList, "gain"),
+      "cover" -> _booster.getScore(featuresList, "cover"),
+      "total_gain" -> _booster.getScore(featuresList, "total_gain"),
+      "total_cover" -> _booster.getScore(featuresList, "total_cover"),
+      "weight" -> _booster.getScore(featuresList, "weight")
+    )
+  }
+  /*
+  viknesh changes ends here
+  */
+
   private var trainingSummary: Option[XGBoostTrainingSummary] = None
 
   /**
